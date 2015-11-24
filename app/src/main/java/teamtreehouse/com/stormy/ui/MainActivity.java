@@ -28,13 +28,14 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import teamtreehouse.com.stormy.R;
 import teamtreehouse.com.stormy.weather.Current;
+import teamtreehouse.com.stormy.weather.Forecast;
 
 
 public class MainActivity extends ActionBarActivity {
 
     public static final String TAG = MainActivity.class.getSimpleName();
 
-    private Current mCurrent;
+    private Forecast mForecast;
 
     @InjectView(R.id.timeLabel) TextView mTimeLabel;
     @InjectView(R.id.temperatureLabel) TextView mTemperatureLabel;
@@ -68,6 +69,11 @@ public class MainActivity extends ActionBarActivity {
         Log.d(TAG, "Main UI code is running!");
     }
 
+    /**
+     * Fetches data from the Forecast IO API
+     * @param latitude Latitude of the location
+     * @param longitude Longitude of the location
+     */
     private void getForecast(double latitude, double longitude) {
         String apiKey = "5a20df57556bd8bcb4924c5a083bc653";
         String forecastUrl = "https://api.forecast.io/forecast/" + apiKey +
@@ -107,7 +113,7 @@ public class MainActivity extends ActionBarActivity {
                         String jsonData = response.body().string();
                         Log.v(TAG, jsonData);
                         if (response.isSuccessful()) {
-                            mCurrent = getCurrentDetails(jsonData);
+                            mForecast = parseWeatherData(jsonData);
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -133,6 +139,9 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
+    /**
+     * Refreshes the UI
+     */
     private void toggleRefresh() {
         if (mProgressBar.getVisibility() == View.INVISIBLE) {
             mProgressBar.setVisibility(View.VISIBLE);
@@ -144,17 +153,43 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
+    /**
+     * Update the UI by setting the weather condition values
+     */
     private void updateDisplay() {
-        mTemperatureLabel.setText(mCurrent.getTemperature() + "");
-        mTimeLabel.setText("At " + mCurrent.getFormattedTime() + " it will be");
-        mHumidityValue.setText(mCurrent.getHumidity() + "");
-        mPrecipValue.setText(mCurrent.getPrecipChance() + "%");
-        mSummaryLabel.setText(mCurrent.getSummary());
+        Current current = mForecast.getCurrent();
 
-        Drawable drawable = getResources().getDrawable(mCurrent.getIconId());
+        mTemperatureLabel.setText(current.getTemperature() + "");
+        mTimeLabel.setText("At " + current.getFormattedTime() + " it will be");
+        mHumidityValue.setText(current.getHumidity() + "");
+        mPrecipValue.setText(current.getPrecipChance() + "%");
+        mSummaryLabel.setText(current.getSummary());
+
+        Drawable drawable = getResources().getDrawable(current.getIconId());
         mIconImageView.setImageDrawable(drawable);
     }
 
+    /**
+     * Parses weather data to the different classes
+     *
+     * @param jsonData Json String
+     * @return Forecast Object
+     * @throws JSONException
+     */
+    private Forecast parseWeatherData(String jsonData)
+            throws JSONException
+    {
+        Forecast forecast = new Forecast();
+        forecast.setCurrent(getCurrentDetails(jsonData));
+        return forecast;
+    }
+    /**
+     * Getting the current weather Json and formatting it or decoding it
+     *
+     * @param jsonData Json data string
+     * @return Current
+     * @throws JSONException
+     */
     private Current getCurrentDetails(String jsonData) throws JSONException {
         JSONObject forecast = new JSONObject(jsonData);
         String timezone = forecast.getString("timezone");
@@ -176,7 +211,11 @@ public class MainActivity extends ActionBarActivity {
         return current;
     }
 
-
+    /**
+     * Checks for network or internet on the user`s device
+     *
+     * @return boolean
+     */
     private boolean isNetworkAvailable() {
         ConnectivityManager manager = (ConnectivityManager)
                 getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -189,6 +228,9 @@ public class MainActivity extends ActionBarActivity {
         return isAvailable;
     }
 
+    /**
+     * Shows the dialog in case of an error
+     */
     private void alertUserAboutError() {
         AlertDialogFragment dialog = new AlertDialogFragment();
         dialog.show(getFragmentManager(), "error_dialog");
