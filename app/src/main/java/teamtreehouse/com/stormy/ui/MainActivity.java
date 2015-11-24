@@ -19,6 +19,7 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -28,12 +29,15 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import teamtreehouse.com.stormy.R;
 import teamtreehouse.com.stormy.weather.Current;
+import teamtreehouse.com.stormy.weather.Day;
 import teamtreehouse.com.stormy.weather.Forecast;
+import teamtreehouse.com.stormy.weather.Hour;
 
 
 public class MainActivity extends ActionBarActivity {
 
     public static final String TAG = MainActivity.class.getSimpleName();
+    private static final String LOG_TAG = MainActivity.class.getSimpleName();
 
     private Forecast mForecast;
 
@@ -123,11 +127,9 @@ public class MainActivity extends ActionBarActivity {
                         } else {
                             alertUserAboutError();
                         }
-                    }
-                    catch (IOException e) {
+                    } catch (IOException e) {
                         Log.e(TAG, "Exception caught: ", e);
-                    }
-                    catch (JSONException e) {
+                    } catch (JSONException e) {
                         Log.e(TAG, "Exception caught: ", e);
                     }
                 }
@@ -180,9 +182,86 @@ public class MainActivity extends ActionBarActivity {
             throws JSONException
     {
         Forecast forecast = new Forecast();
+
         forecast.setCurrent(getCurrentDetails(jsonData));
+        forecast.setHourlyForecast(getHourlyDetails(jsonData));
+        forecast.setDailyForecast(getDailyDetails(jsonData));
+
         return forecast;
     }
+
+    /**
+     * Getting daily weather data from the json object
+     *
+     * @param jsonData Json string
+     * @return Daily Array
+     * @throws JSONException
+     */
+    private Day[] getDailyDetails(String jsonData)
+            throws JSONException{
+        JSONObject forecast = new JSONObject(jsonData);
+        String timezone = forecast.getString("timezone");
+
+        JSONObject daily = forecast.getJSONObject("daily");
+        JSONArray data = daily.getJSONArray("data");
+
+        Day[] days = new Day[data.length()];
+
+        for (int i = 0; i < data.length(); i++)
+        {
+            JSONObject jsonDaily = data.getJSONObject(i);
+
+            Day day = new Day();
+            day.setSummary(jsonDaily.getString("summary"));
+            day.setTime(jsonDaily.getLong("time"));
+            day.setIcon(jsonDaily.getString("icon"));
+            day.setTemperatureMax(jsonDaily.getDouble("temperatureMax"));
+            day.setTimezone(timezone);
+
+            days[i] = day;
+        }
+        return days;
+    }
+
+    /**
+     * Getting the hourly data from the json object
+     *
+     * @param jsonData Json String
+     * @return Hour Array
+     * @throws JSONException
+     */
+    private Hour[] getHourlyDetails(String jsonData)
+            throws JSONException{
+        JSONObject forecast = new JSONObject(jsonData);
+        String timezone = forecast.getString("timezone");
+
+        final String HOURLY = "hourly";
+        final String DATA = "data";
+
+        JSONObject hourly = forecast.getJSONObject(HOURLY);
+        JSONArray data = hourly.getJSONArray(DATA);
+
+        //Creating a Hourly array
+        Hour[] hours = new Hour[data.length()];
+
+        for (int i = 0; i < data.length(); i++)
+        {
+            JSONObject jsonHour = data.getJSONObject(i);
+
+            //Setting the hourly weather data
+            Hour hour = new Hour();
+            hour.setIcon(jsonHour.getString("icon"));
+            hour.setSummary(jsonHour.getString("summary"));
+            hour.setTemperature(jsonHour.getDouble("temperature"));
+            hour.setTime(jsonHour.getLong("time"));
+            hour.setTimezone(timezone);
+
+            hours[i] = hour;
+            Log.i(LOG_TAG,"Hourly array: " + hours[i].toString());
+        }
+        return hours;
+    }
+
     /**
      * Getting the current weather Json and formatting it or decoding it
      *
