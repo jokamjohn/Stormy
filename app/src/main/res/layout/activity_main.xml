@@ -146,4 +146,31 @@
         android:layout_centerHorizontal="true"
         android:layout_alignBottom="@+id/refreshImageView"/>
 
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="HOURLY"
+            android:id="@+id/hourlyButton"
+            android:layout_weight="1"
+            android:background="#40ffffff"
+            android:textColor="#ffffffff"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="7 DAYS"
+            android:id="@+id/button2"
+            android:layout_weight="1"
+            android:textColor="#ffffffff"
+            android:background="#40ffffff"/>
+    </LinearLayout>
+
 </RelativeLayout>
