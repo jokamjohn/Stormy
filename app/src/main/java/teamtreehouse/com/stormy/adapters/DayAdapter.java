@@ -50,7 +50,7 @@ public class DayAdapter extends BaseAdapter {
             view = LayoutInflater.from(mContext).inflate(R.layout.daily_list_item,null);
             holder = new ViewHolder();
 
-            holder.iconImageView = (ImageView) view.findViewById(R.id.circleImageView);
+            holder.iconImageView = (ImageView) view.findViewById(R.id.iconImageView);
             holder.dayLabel = (TextView) view.findViewById(R.id.dayNameLabel);
             holder.temperatureLabel = (TextView) view.findViewById(R.id.temperatureLabel);
 
