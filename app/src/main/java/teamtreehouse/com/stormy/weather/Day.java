@@ -1,5 +1,9 @@
 package teamtreehouse.com.stormy.weather;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
+
 /**
  * Created by jokamjohn on 11/24/2015.
  */
@@ -27,8 +31,9 @@ public class Day {
         mSummary = summary;
     }
 
-    public double getTemperatureMax() {
-        return mTemperatureMax;
+    //Rounding off to return an int
+    public int getTemperatureMax() {
+        return (int) Math.round(mTemperatureMax);
     }
 
     public void setTemperatureMax(double temperatureMax) {
@@ -49,5 +54,29 @@ public class Day {
 
     public void setTimezone(String timezone) {
         mTimezone = timezone;
+    }
+
+    /**
+     * Getting the weather icon id
+     *
+     * @return Id of the weather icon drawable
+     */
+    public int getIconId() {
+
+        return Forecast.getIconId(mIcon);
+    }
+
+    /**
+     * Format the timestamp from the Api to get a Human Readable string
+     * @return Date
+     */
+    public String getDayOfTheWeek()
+    {
+        SimpleDateFormat formatter = new SimpleDateFormat("EEEE");
+        formatter.setTimeZone(TimeZone.getTimeZone(mTimezone));
+
+        Date dateTime = new Date(mTime * 1000);
+
+        return formatter.format(dateTime);
     }
 }
