@@ -15,9 +15,15 @@
         android:id="@android:id/list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
+        android:layout_alignParentLeft="false"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"/>
+        android:layout_alignParentTop="false"
+        android:layout_below="@+id/thisWeekLabel"
+        android:layout_above="@+id/locationLabel"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:divider="@null"
+        android:dividerHeight="0dp"/>
 
     <TextView
         android:id="@android:id/empty"
@@ -27,4 +33,25 @@
         android:layout_centerVertical="true"
         android:text="@string/no_data_list_view"
         android:textColor="#ffffffff"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="This week`s Weather"
+        android:id="@+id/thisWeekLabel"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:textColor="#ffffffff"
+        android:textSize="30sp"
+        android:layout_marginTop="16dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Kampala UG"
+        android:id="@+id/locationLabel"
+        android:textColor="#ffffffff"
+        android:textSize="18sp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"/>
 </RelativeLayout>
