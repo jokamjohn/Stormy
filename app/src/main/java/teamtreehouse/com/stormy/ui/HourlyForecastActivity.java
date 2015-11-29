@@ -37,6 +37,9 @@ public class HourlyForecastActivity extends ActionBarActivity {
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(layoutManager);
+
+        //set if data has a fixed size
+        mRecyclerView.setHasFixedSize(true);
     }
 
 }
