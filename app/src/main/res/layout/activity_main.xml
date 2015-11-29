@@ -129,7 +129,7 @@
         android:text="Getting current weather..."
         android:textColor="@android:color/white"
         android:textSize="18dp"
-        android:layout_marginBottom="4dp"/>
+        />
 
     <ImageView
         android:id="@+id/refreshImageView"
@@ -153,6 +153,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
+        android:layout_marginTop="10dp"
         android:orientation="horizontal">
 
         <Button
@@ -162,7 +163,8 @@
             android:layout_weight="1"
             android:background="#40ffffff"
             android:text="HOURLY"
-            android:textColor="#ffffffff"/>
+            android:textColor="#ffffffff"
+            />
 
         <Button
             android:id="@+id/dailyButton"
@@ -173,7 +175,8 @@
             android:layout_weight="1"
             android:background="#40ffffff"
             android:text="7 DAYS"
-            android:textColor="#ffffffff"/>
+            android:textColor="#ffffffff"
+            />
     </LinearLayout>
 
 </RelativeLayout>
