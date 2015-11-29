@@ -41,6 +41,7 @@ public class MainActivity extends ActionBarActivity {
     public static final String TAG = MainActivity.class.getSimpleName();
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
     public static final String DAILY_FORECAST = "DAILY_FORECAST";
+    private static final String HOURLY_FORECAST = "HOURLY_FOREAST";
 
     private Forecast mForecast;
 
@@ -327,6 +328,14 @@ public class MainActivity extends ActionBarActivity {
     {
         Intent intent = new Intent(this,DailyForecastActivity.class);
         intent.putExtra(DAILY_FORECAST,mForecast.getDailyForecast());
+        startActivity(intent);
+    }
+
+    @OnClick (R.id.hourlyButton)
+    public void startHourlyForecast()
+    {
+        Intent intent = new Intent(this,HourlyForecastActivity.class);
+        intent.putExtra(HOURLY_FORECAST,mForecast.getHourlyForecast());
         startActivity(intent);
     }
 }
